@@ -1,0 +1,177 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend-tests:
+    name: Backend tests (Python 3.12)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      APP_MODE: test
+      DATABASE_URL: sqlite:///./riskroute-ci.db
+      ALLOW_MOCK_MAPBOX: "true"
+      SEED_DEMO_DATA: "false"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version-file: .python-version
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - run: python -m pip install --requirement requirements.txt
+      - run: python -m pytest app/tests -q
+
+  migration-postgis:
+    name: Alembic migration (PostGIS 16 / 3.4)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4-alpine
+        env:
+          POSTGRES_DB: riskroute_test
+          POSTGRES_USER: riskroute
+          POSTGRES_PASSWORD: riskroute-test-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U riskroute -d riskroute_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      APP_MODE: test
+      DATABASE_URL: postgresql+psycopg://riskroute:riskroute-test-only@127.0.0.1:5432/riskroute_test
+      ALLOW_MOCK_MAPBOX: "true"
+      SEED_DEMO_DATA: "false"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version-file: .python-version
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - run: python -m pip install --requirement requirements.txt
+      - run: alembic upgrade head
+      - name: Verify the migrated schema and PostGIS extension
+        run: |
+          python - <<'PY'
+          from sqlalchemy import inspect, text
+
+          from app.database import Base, engine
+          from app.models import db_models  # noqa: F401
+
+          actual = set(inspect(engine).get_table_names())
+          expected = set(Base.metadata.tables)
+          missing = sorted(expected - actual)
+          if missing:
+              raise SystemExit(f"Alembic did not create mapped tables: {', '.join(missing)}")
+          with engine.connect() as connection:
+              installed = connection.execute(
+                  text("SELECT EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'postgis')")
+              ).scalar_one()
+          if not installed:
+              raise SystemExit("PostGIS extension is not installed")
+          print(f"Verified {len(actual)} tables and PostGIS")
+          PY
+      - run: alembic current
+
+  frontend-quality:
+    name: Frontend typecheck and build (Node 22)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: frontend
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:8000
+      NEXT_PUBLIC_MAPBOX_TOKEN: ""
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run build
+
+  container-images:
+    name: Container build (${{ matrix.image }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: backend
+            context: ./backend
+            build_args: ""
+          - image: frontend
+            context: ./frontend
+            build_args: |
+              NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000
+              NEXT_PUBLIC_MAPBOX_TOKEN=
+    steps:
+      - uses: actions/checkout@v6
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/build-push-action@v7
+        with:
+          context: ${{ matrix.context }}
+          target: runtime
+          push: false
+          tags: riskroute-${{ matrix.image }}:ci
+          build-args: ${{ matrix.build_args }}
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+
+  python-dependency-audit:
+    name: Python dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version-file: .python-version
+          cache: pip
+      - run: python -m pip install pip-audit==2.10.1
+      - run: python -m pip_audit --requirement backend/requirements.txt --strict
+
+  frontend-dependency-audit:
+    name: Frontend dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npm audit --audit-level=high

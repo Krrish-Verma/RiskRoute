@@ -1,0 +1,175 @@
+<svg width="1440" height="860" viewBox="0 0 1440 860" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">RiskRoute interface preview</title>
+  <desc id="desc">A polished preview of the RiskRoute homepage and route comparison experience, showing a Dallas map, three route alternatives, and transparent historical risk scores.</desc>
+  <defs>
+    <linearGradient id="canvas" x1="0" y1="0" x2="1440" y2="860" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF7ED"/>
+      <stop offset="0.45" stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#F1F5F9"/>
+    </linearGradient>
+    <linearGradient id="map" x1="785" y1="205" x2="1300" y2="470" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F8FAFC"/>
+    </linearGradient>
+    <filter id="shadow" x="18" y="14" width="1404" height="836" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#0F172A" flood-opacity="0.12"/>
+    </filter>
+    <filter id="softShadow" x="744" y="114" width="597" height="662" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#0F172A" flood-opacity="0.09"/>
+    </filter>
+    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#CBD5E1" fill-opacity="0.42"/>
+    </pattern>
+    <clipPath id="browserClip">
+      <rect x="56" y="48" width="1328" height="764" rx="26"/>
+    </clipPath>
+    <clipPath id="mapClip">
+      <rect x="785" y="205" width="515" height="265" rx="18"/>
+    </clipPath>
+  </defs>
+
+  <rect width="1440" height="860" fill="url(#canvas)"/>
+  <rect width="1440" height="860" fill="url(#dots)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="56" y="48" width="1328" height="764" rx="26" fill="white"/>
+  </g>
+  <g clip-path="url(#browserClip)">
+    <rect x="56" y="48" width="1328" height="764" fill="white"/>
+    <rect x="56" y="48" width="1328" height="66" fill="#FFFFFF"/>
+    <path d="M56 113.5H1384" stroke="#E5E7EB"/>
+
+    <circle cx="84" cy="81" r="5" fill="#EF4444"/>
+    <circle cx="101" cy="81" r="5" fill="#F59E0B"/>
+    <circle cx="118" cy="81" r="5" fill="#22C55E"/>
+
+    <g transform="translate(153 69)">
+      <rect width="25" height="25" rx="8" fill="#111827"/>
+      <path d="M6.5 17.5L10.1 13.8L13.2 15.8L18.5 8.4" stroke="#F97316" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="18.4" cy="8.3" r="2.2" fill="#FFF7ED" stroke="#F97316" stroke-width="1.4"/>
+    </g>
+    <text x="188" y="87" fill="#0A0A0A" font-family="Inter, Geist, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="-0.5">RiskRoute</text>
+
+    <text x="600" y="86" fill="#4B5563" font-family="Inter, Geist, Arial, sans-serif" font-size="14" font-weight="500">How it works</text>
+    <text x="706" y="86" fill="#4B5563" font-family="Inter, Geist, Arial, sans-serif" font-size="14" font-weight="500">Hotspots</text>
+    <text x="786" y="86" fill="#4B5563" font-family="Inter, Geist, Arial, sans-serif" font-size="14" font-weight="500">Methodology</text>
+    <rect x="1191" y="66" width="139" height="32" rx="16" fill="#111827"/>
+    <text x="1260.5" y="87" text-anchor="middle" fill="white" font-family="Inter, Geist, Arial, sans-serif" font-size="13" font-weight="650">Analyze a route</text>
+
+    <rect x="99" y="153" width="221" height="31" rx="15.5" fill="#FFF7ED" stroke="#FED7AA"/>
+    <circle cx="116" cy="168.5" r="4.5" fill="#F97316"/>
+    <text x="128" y="173" fill="#9A3412" font-family="Inter, Geist, Arial, sans-serif" font-size="12" font-weight="650" letter-spacing="0.15">DALLAS LAUNCH BETA</text>
+
+    <text x="99" y="248" fill="#0A0A0A" font-family="Inter, Geist, Arial, sans-serif" font-size="54" font-weight="700" letter-spacing="-2.8">
+      <tspan x="99" dy="0">Compare route-risk</tspan>
+      <tspan x="99" dy="57">tradeoffs with the</tspan>
+      <tspan x="99" dy="57">evidence attached.</tspan>
+    </text>
+
+    <text x="99" y="447" fill="#5B6472" font-family="Inter, Geist, Arial, sans-serif" font-size="17" font-weight="400">
+      <tspan x="99" dy="0">Historical crash patterns, traffic exposure, driver profile,</tspan>
+      <tspan x="99" dy="27">and time context — explained for every route alternative.</tspan>
+    </text>
+
+    <rect x="99" y="513" width="162" height="48" rx="14" fill="#111827"/>
+    <text x="123" y="542" fill="white" font-family="Inter, Geist, Arial, sans-serif" font-size="14" font-weight="650">Analyze a route</text>
+    <path d="M231 537H243M238 532L243 537L238 542" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="273" y="513" width="133" height="48" rx="14" fill="white" stroke="#D1D5DB"/>
+    <text x="339.5" y="542" text-anchor="middle" fill="#111827" font-family="Inter, Geist, Arial, sans-serif" font-size="14" font-weight="650">View hotspots</text>
+
+    <path d="M99 614H661" stroke="#E5E7EB"/>
+    <g transform="translate(99 646)">
+      <text x="0" y="0" fill="#111827" font-family="Inter, Geist, Arial, sans-serif" font-size="24" font-weight="700">37.5K</text>
+      <text x="0" y="24" fill="#6B7280" font-family="Inter, Geist, Arial, sans-serif" font-size="12" font-weight="500">validated crash records</text>
+    </g>
+    <g transform="translate(282 646)">
+      <text x="0" y="0" fill="#111827" font-family="Inter, Geist, Arial, sans-serif" font-size="24" font-weight="700">3</text>
+      <text x="0" y="24" fill="#6B7280" font-family="Inter, Geist, Arial, sans-serif" font-size="12" font-weight="500">route alternatives</text>
+    </g>
+    <g transform="translate(435 646)">
+      <text x="0" y="0" fill="#111827" font-family="Inter, Geist, Arial, sans-serif" font-size="24" font-weight="700">100%</text>
+      <text x="0" y="24" fill="#6B7280" font-family="Inter, Geist, Arial, sans-serif" font-size="12" font-weight="500">evidence attached</text>
+    </g>
+    <rect x="99" y="714" width="562" height="49" rx="14" fill="#F8FAFC" stroke="#E5E7EB"/>
+    <circle cx="121" cy="738.5" r="8" fill="#ECFDF5" stroke="#86EFAC"/>
+    <path d="M117.5 738.5L120.2 741.2L125 735.5" stroke="#16A34A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="139" y="735" fill="#111827" font-family="Inter, Geist, Arial, sans-serif" font-size="12" font-weight="650">Comparative, explainable, versioned</text>
+    <text x="139" y="751" fill="#6B7280" font-family="Inter, Geist, Arial, sans-serif" font-size="11">Lower-risk based on historical crash patterns — never a safety guarantee.</text>
+
+    <g filter="url(#softShadow)">
+      <rect x="760" y="130" width="565" height="630" rx="24" fill="#F8FAFC"/>
+    </g>
+    <rect x="760.5" y="130.5" width="564" height="629" rx="23.5" stroke="#E5E7EB"/>
+    <text x="785" y="166" fill="#6B7280" font-family="Inter, Geist, Arial, sans-serif" font-size="12" font-weight="600" letter-spacing="0.5">ROUTE COMPARISON</text>
+    <text x="785" y="190" fill="#111827" font-family="Inter, Geist, Arial, sans-serif" font-size="21" font-weight="700" letter-spacing="-0.5">Dallas City Hall → Galleria Dallas</text>
+    <rect x="1175" y="151" width="125" height="26" rx="13" fill="#FFF7ED"/>
+    <text x="1237.5" y="168.5" text-anchor="middle" fill="#C2410C" font-family="Inter, Geist, Arial, sans-serif" font-size="10" font-weight="700">ILLUSTRATIVE</text>
+
+    <g clip-path="url(#mapClip)">
+      <rect x="785" y="205" width="515" height="265" rx="18" fill="url(#map)"/>
+      <path d="M785 249H1300M785 304H1300M785 359H1300M785 414H1300" stroke="#E5E7EB" stroke-width="1"/>
+      <path d="M842 205V470M915 205V470M988 205V470M1061 205V470M1134 205V470M1207 205V470" stroke="#E5E7EB" stroke-width="1"/>
+      <path d="M757 436C844 421 863 345 934 345C1012 345 1026 270 1101 266C1178 262 1242 225 1331 248" stroke="#CBD5E1" stroke-width="9" stroke-linecap="round"/>
+      <path d="M785 281C854 271 890 300 932 323C981 350 1032 369 1088 345C1152 317 1183 325 1300 402" stroke="#E2E8F0" stroke-width="7" stroke-linecap="round"/>
+      <path d="M806 427C867 405 887 353 938 345C1004 335 1041 276 1101 266C1177 253 1236 230 1281 244" stroke="#111827" stroke-width="5" stroke-linecap="round"/>
+      <path d="M806 427C860 417 910 404 954 374C1007 338 1046 353 1092 340C1154 321 1193 284 1281 244" stroke="#16A34A" stroke-width="6" stroke-linecap="round"/>
+      <path d="M806 427C850 390 875 312 935 300C1004 286 1045 317 1101 287C1153 259 1214 255 1281 244" stroke="#2563EB" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 7"/>
+      <g fill="#DC2626" opacity="0.78">
+        <circle cx="963" cy="340" r="12"/>
+        <circle cx="1089" cy="305" r="9"/>
+        <circle cx="1152" cy="277" r="7"/>
+      </g>
+      <g fill="#F97316" opacity="0.74">
+        <circle cx="1034" cy="352" r="6"/>
+        <circle cx="1192" cy="309" r="5"/>
+        <circle cx="1234" cy="260" r="5"/>
+      </g>
+      <circle cx="806" cy="427" r="8" fill="white" stroke="#111827" stroke-width="4"/>
+      <circle cx="1281" cy="244" r="8" fill="white" stroke="#111827" stroke-width="4"/>
+    </g>
+    <rect x="785.5" y="205.5" width="514" height="264" rx="17.5" stroke="#E5E7EB"/>
+    <rect x="807" y="222" width="194" height="29" rx="14.5" fill="white" fill-opacity="0.94" stroke="#E5E7EB"/>
+    <circle cx="824" cy="236.5" r="4" fill="#16A34A"/>
+    <text x="837" y="241" fill="#374151" font-family="Inter, Geist, Arial, sans-serif" font-size="11" font-weight="600">Lower modeled risk route</text>
+    <rect x="1093" y="424" width="184" height="30" rx="15" fill="white" fill-opacity="0.95" stroke="#E5E7EB"/>
+    <circle cx="1110" cy="439" r="4" fill="#DC2626"/>
+    <text x="1123" y="443" fill="#374151" font-family="Inter, Geist, Arial, sans-serif" font-size="11" font-weight="600">Historical hotspot cells</text>
+
+    <g transform="translate(785 489)">
+      <rect width="515" height="70" rx="16" fill="white" stroke="#16A34A" stroke-width="1.5"/>
+      <rect x="14" y="14" width="42" height="42" rx="12" fill="#111827"/>
+      <path d="M25 36L31.5 41.5L45 26" stroke="#FB923C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="70" y="28" fill="#111827" font-family="Inter, Geist, Arial, sans-serif" font-size="14" font-weight="700">Lowest modeled risk</text>
+      <rect x="223" y="13" width="92" height="22" rx="11" fill="#ECFDF5"/>
+      <text x="269" y="28" text-anchor="middle" fill="#15803D" font-family="Inter, Geist, Arial, sans-serif" font-size="9.5" font-weight="700">RECOMMENDED</text>
+      <text x="70" y="50" fill="#6B7280" font-family="Inter, Geist, Arial, sans-serif" font-size="11">16 min · 9.7 mi · 8 nearby records</text>
+      <text x="483" y="31" text-anchor="end" fill="#16A34A" font-family="Inter, Geist, Arial, sans-serif" font-size="24" font-weight="750">46.8</text>
+      <text x="483" y="50" text-anchor="end" fill="#6B7280" font-family="Inter, Geist, Arial, sans-serif" font-size="10" font-weight="600">MODERATE</text>
+    </g>
+
+    <g transform="translate(785 571)">
+      <rect width="515" height="70" rx="16" fill="white" stroke="#E5E7EB"/>
+      <rect x="14" y="14" width="42" height="42" rx="12" fill="#F8FAFC" stroke="#E5E7EB"/>
+      <path d="M35 23V47M28 31L35 23L42 31" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="70" y="29" fill="#111827" font-family="Inter, Geist, Arial, sans-serif" font-size="14" font-weight="700">Balanced</text>
+      <text x="70" y="50" fill="#6B7280" font-family="Inter, Geist, Arial, sans-serif" font-size="11">17 min · 10.2 mi · 12 nearby records</text>
+      <text x="483" y="31" text-anchor="end" fill="#F97316" font-family="Inter, Geist, Arial, sans-serif" font-size="24" font-weight="750">58.1</text>
+      <text x="483" y="50" text-anchor="end" fill="#6B7280" font-family="Inter, Geist, Arial, sans-serif" font-size="10" font-weight="600">HIGH</text>
+    </g>
+
+    <g transform="translate(785 653)">
+      <rect width="515" height="70" rx="16" fill="white" stroke="#E5E7EB"/>
+      <rect x="14" y="14" width="42" height="42" rx="12" fill="#F8FAFC" stroke="#E5E7EB"/>
+      <circle cx="35" cy="35" r="10" stroke="#111827" stroke-width="2"/>
+      <path d="M35 29V36L40 39" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="70" y="29" fill="#111827" font-family="Inter, Geist, Arial, sans-serif" font-size="14" font-weight="700">Fastest</text>
+      <text x="70" y="50" fill="#6B7280" font-family="Inter, Geist, Arial, sans-serif" font-size="11">13 min · 8.9 mi · 21 nearby records</text>
+      <text x="483" y="31" text-anchor="end" fill="#DC2626" font-family="Inter, Geist, Arial, sans-serif" font-size="24" font-weight="750">84.6</text>
+      <text x="483" y="50" text-anchor="end" fill="#6B7280" font-family="Inter, Geist, Arial, sans-serif" font-size="10" font-weight="600">VERY HIGH</text>
+    </g>
+
+    <text x="785" y="745" fill="#9CA3AF" font-family="Inter, Geist, Arial, sans-serif" font-size="9.5">Illustrative values · Results include data version, coverage dates, confidence, and limitations.</text>
+  </g>
+
+  <rect x="56.5" y="48.5" width="1327" height="763" rx="25.5" stroke="#DDE2E8"/>
+</svg>

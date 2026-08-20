@@ -1,0 +1,75 @@
+name: Sync Dallas public exposure data
+
+on:
+  schedule:
+    # Weekly exposure refresh. Authenticated CRIS extracts are intentionally
+    # excluded because their acquisition requires an authorized human.
+    - cron: "23 8 * * 1"
+  workflow_dispatch:
+    inputs:
+      full_refresh:
+        description: Remove upstream rows no longer present
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dallas-public-data-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Validate and upsert Dallas exposure data
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment: dallas-data
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      APP_MODE: production
+      ENVIRONMENT: production
+      DATABASE_URL: ${{ secrets.DALLAS_SYNC_DATABASE_URL }}
+      ALLOW_MOCK_MAPBOX: "false"
+      SEED_DEMO_DATA: "false"
+      FULL_REFRESH: ${{ github.event.inputs.full_refresh || 'false' }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version-file: .python-version
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - name: Validate the protected database target
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          value = os.environ.get("DATABASE_URL", "")
+          if not value.startswith(("postgresql://", "postgresql+psycopg://")):
+              raise SystemExit("DALLAS_SYNC_DATABASE_URL must be a PostgreSQL/PostGIS DSN")
+          PY
+      - run: python -m pip install --requirement requirements.txt
+      - name: Apply schema migrations
+        run: alembic upgrade head
+      - name: Synchronize, validate, and upsert
+        shell: bash
+        run: |
+          args=(--source exposure)
+          if [[ "$FULL_REFRESH" == "true" ]]; then
+            args+=(--full-refresh)
+          fi
+          python -m app.scripts.sync_dallas_data "${args[@]}"
+      - name: Record the data boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Dallas data sync"
+            echo "- Source selection: \`exposure\` (FHWA HPMS only)"
+            echo "- Raw/proprietary CRIS data was not downloaded, uploaded, or committed."
+            echo "- Validation summaries remain ephemeral runner files; authoritative metadata is stored in PostGIS."
+          } >> "$GITHUB_STEP_SUMMARY"

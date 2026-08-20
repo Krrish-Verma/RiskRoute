@@ -1,0 +1,111 @@
+name: riskroute
+
+services:
+  db:
+    image: postgis/postgis:16-3.4-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-riskroute}
+      POSTGRES_USER: ${POSTGRES_USER:-riskroute}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-riskroute-local-only}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - riskroute-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  migrate:
+    build:
+      context: ./backend
+      target: runtime
+    restart: "no"
+    environment: &backend-environment
+      APP_MODE: ${APP_MODE:-demo}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://riskroute:riskroute-local-only@db:5432/riskroute}
+      MAPBOX_ACCESS_TOKEN: ${MAPBOX_ACCESS_TOKEN:-}
+      ALLOW_MOCK_MAPBOX: ${ALLOW_MOCK_MAPBOX:-true}
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA:-true}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+      DATABASE_POOL_SIZE: ${DATABASE_POOL_SIZE:-10}
+      DATABASE_MAX_OVERFLOW: ${DATABASE_MAX_OVERFLOW:-20}
+      MAPBOX_TIMEOUT_SECONDS: ${MAPBOX_TIMEOUT_SECONDS:-10}
+      MAPBOX_MAX_RETRIES: ${MAPBOX_MAX_RETRIES:-2}
+      MAPBOX_CIRCUIT_FAILURE_THRESHOLD: ${MAPBOX_CIRCUIT_FAILURE_THRESHOLD:-5}
+      MAPBOX_CIRCUIT_RESET_SECONDS: ${MAPBOX_CIRCUIT_RESET_SECONDS:-30}
+      RATE_LIMIT_PER_MINUTE: ${RATE_LIMIT_PER_MINUTE:-60}
+      MAX_REQUEST_BYTES: ${MAX_REQUEST_BYTES:-1048576}
+      DATASET_MAX_AGE_DAYS: ${DATASET_MAX_AGE_DAYS:-550}
+      REPORT_RETENTION_DAYS: ${REPORT_RETENTION_DAYS:-30}
+      LAUNCH_AREA_NAME: ${LAUNCH_AREA_NAME:-Dallas / North Dallas, Texas}
+      LAUNCH_MIN_LAT: ${LAUNCH_MIN_LAT:-32.60}
+      LAUNCH_MAX_LAT: ${LAUNCH_MAX_LAT:-33.15}
+      LAUNCH_MIN_LNG: ${LAUNCH_MIN_LNG:--97.05}
+      LAUNCH_MAX_LNG: ${LAUNCH_MAX_LNG:--96.40}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["alembic", "upgrade", "head"]
+
+  backend:
+    build:
+      context: ./backend
+      target: runtime
+    restart: unless-stopped
+    environment: *backend-environment
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).read()",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  frontend:
+    build:
+      context: ./frontend
+      target: runtime
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
+        NEXT_PUBLIC_MAPBOX_TOKEN: ${NEXT_PUBLIC_MAPBOX_TOKEN:-}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "const http=require('http');const r=http.get('http://127.0.0.1:3000/',x=>{x.resume();process.exit(x.statusCode>=200&&x.statusCode<400?0:1)});r.setTimeout(3000,()=>r.destroy());r.on('error',()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  riskroute-postgres:

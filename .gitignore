@@ -1,0 +1,73 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+backend/*.db
+backend/*.db-shm
+backend/*.db-wal
+backend/*.sqlite
+backend/*.sqlite3
+
+# Node
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.turbo/
+frontend/coverage/
+frontend/*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.*
+!.env.example
+.env.local
+frontend/.env.local
+backend/.env
+
+# Runtime logs and temporary files
+*.log
+*.pid
+*.tmp
+tmp/
+
+# Data boundaries: never commit raw/restricted imports or generated run output
+backend/data/raw/
+backend/data/staging/
+backend/data/reports/
+backend/data/**/*.csv
+backend/data/**/*.parquet
+backend/data/**/*.geojson
+backend/data/**/*.ndjson
+backend/data/**/*.gpkg
+backend/data/**/*.zip
+backend/data/**/*.dump
+backend/app/data/raw/
+backend/app/models/generated/
+backend/app/models/training-runs/
+backend/app/models/candidates/
+backend/app/models/*.pkl
+backend/app/models/*.joblib
+backend/app/models/*.onnx
+backend/app/models/*_metrics.json
+backend/app/models/*_manifest.json
+
+# OS and editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
