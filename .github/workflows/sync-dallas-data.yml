@@ -37,7 +37,7 @@ jobs:
       SEED_DEMO_DATA: "false"
       FULL_REFRESH: ${{ github.event.inputs.full_refresh || 'false' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
         with:
           python-version-file: .python-version
